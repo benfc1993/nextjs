@@ -1,0 +1,9 @@
+dist
+node_modules
+coverage
+.next
+build
+*.snap
+
+.serverless/
+.serverless_nextjs/
