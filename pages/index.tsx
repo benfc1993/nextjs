@@ -1,25 +1,23 @@
-import { Header } from '../components/Header/Header'
-import { Children } from '../components/Children/Children'
+import dynamic from 'next/dynamic'
+const Children = dynamic(() => import('../components/Children/Children'))
+const Header = dynamic(() => import('../components/Header/Header'))
 
 import { GetServerSideProps } from 'next'
 import { Button, Link } from '@chakra-ui/core'
 
 export default function Home(props) {
     const { product, menu } = props
-    console.log(menu)
     return (
         <>
             <p>{product.sku}</p>
             <Header title={'hellloooo'} text={'this is the text'} />
-            {menu?.menuItems?.map((item) => (
-                <>
-                    <Link href={item.path}>
-                        <p>{item?.linkText}</p>
-                        {item?.filteredChildren.length > 0 && (
-                            <Children items={item.filteredChildren} />
-                        )}
-                    </Link>
-                </>
+            {menu?.menuItems?.map((item, index) => (
+                <Link href={item.path} key={index}>
+                    <p>{item?.linkText}</p>
+                    {item?.filteredChildren.length > 0 && (
+                        <Children items={item.filteredChildren} />
+                    )}
+                </Link>
             ))}
         </>
     )
@@ -39,6 +37,5 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             props['menu'] = data
         })
         .catch((e) => {})
-    console.log(props)
     return { props }
 }

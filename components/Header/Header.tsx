@@ -6,7 +6,7 @@ export type HeaderProps = {
     text: string
 }
 
-export const Header: React.FC<HeaderProps> = (props) => {
+const Header: React.FC<HeaderProps> = (props) => {
     const { title, text } = props
     return (
         <Box d={'flex'} flexDir={'column'}>
@@ -15,3 +15,5 @@ export const Header: React.FC<HeaderProps> = (props) => {
         </Box>
     )
 }
+
+export default Header
