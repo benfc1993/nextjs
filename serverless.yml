@@ -1,0 +1,10 @@
+app:
+    component: '@sls-next/serverless-component@1.18.0-alpha.12'
+    inputs:
+        domain:
+            - ${env.SUBDOMAIN}
+            - ${env.DOMAIN}
+        useServerlessTraceTarget: true
+        bucketRegion: eu-west-2
+        memory: 1536
+        timeout: 30

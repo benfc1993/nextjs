@@ -1,0 +1,159 @@
+image:
+    name: 323630285488.dkr.ecr.eu-west-1.amazonaws.com/node:1
+    aws:
+        access-key: $REPO_AWS_KEY
+        secret-key: $REPO_AWS_SECRET
+
+definitions:
+    steps:
+        - step: &install
+              name: Installing dependencies
+              caches:
+                  - nodecustom
+                  - yarn
+              script:
+                  - yarn
+        - step: &lint
+              name: Linting files
+              caches:
+                  - nodecustom
+                  - yarn
+              script:
+                  - yarn
+                  - yarn lint
+        - step: &build
+              name: Building nextjs app
+              caches:
+                  - nodecustom
+                  - yarn
+                  - nextcache
+              script:
+                  - yarn
+                  - yarn build
+              artifacts:
+                  - dist/**
+        - step: &test
+              name: Testing app
+              caches:
+                  - yarn
+                  - nodecustom
+                  - yarn
+              script:
+                  - yarn
+                  - yarn test
+        - step: &publish
+              name: Publishing to chromatic
+              caches:
+                  - nodecustom
+                  - yarn
+              script:
+                  - yarn
+                  - CHROMATIC_PROJECT_TOKEN=$CHROMATIC_PROJECT_TOKEN yarn chromatic
+                    --exit-once-uploaded
+        - step: &deploy
+              caches:
+                  - nodecustom
+                  - yarn
+                  - nextcache
+              script:
+                  - yarn
+                  # get artifacts before deploying to make sure we re-use AWS resources
+                  - AWS_ACCESS_KEY_ID=$STOREFRONT_BUCKET_ACCESS_KEY
+                    AWS_SECRET_ACCESS_KEY=$STOREFRONT_BUCKET_ACCESS_SECRET aws s3 sync
+                    s3://$STOREFRONT_BUCKET_NAME/.serverless .serverless --region eu-west-2
+                  # globally assign the exit code from the prior command to $RESULT for use in following scripts
+                  - export RESULT=$?
+                  # the serverless component doesn't handle exit codes properly so we need to grep logs for errors
+                  - export LOGFILE=peracto-$BITBUCKET_DEPLOYMENT_ENVIRONMENT-serverless-log.txt
+                  # we get 'soft' failures from the serverless command, so ensure we check for these
+                  - yarn serverless --stage=$BITBUCKET_DEPLOYMENT_ENVIRONMENT --debug 2>&1 | tee
+                    $LOGFILE
+                  - bash ./check-for-deployment-errors.sh $LOGFILE
+              artifacts:
+                  - .serverless/**
+        - step: &pushartifacts
+              name: Pushing artifacts
+              script:
+                  - AWS_ACCESS_KEY_ID=$STOREFRONT_BUCKET_ACCESS_KEY
+                    AWS_SECRET_ACCESS_KEY=$STOREFRONT_BUCKET_ACCESS_SECRET aws s3 sync .serverless
+                    s3://$STOREFRONT_BUCKET_NAME/.serverless --region eu-west-2
+              artifacts:
+                  - .serverless/**
+    caches:
+        nextcache: .next/cache
+        nodecustom: ./node_modules
+        yarn: /usr/local/share/.cache/yarn
+pipelines:
+    default:
+        - step: *install
+        - parallel:
+              - step: *lint
+              - step: *build
+        - step: *test
+        - step: *publish
+    branches:
+        master:
+            - step: *install
+            - parallel:
+                  - step: *lint
+                  - step: *build
+            - step: *test
+            - step: *publish
+            - step:
+                  <<: *deploy
+                  name: Deploy to Staging
+                  deployment: staging
+            - step: *pushartifacts
+            - step:
+                  <<: *deploy
+                  name: Deploy to production?
+                  deployment: prod
+                  trigger: manual
+            - step: *pushartifacts
+        '{release/*,feature/*}':
+            - step: *install
+            - parallel:
+                  - step: *lint
+                  - step: *build
+            - step: *test
+            - step: *publish
+            - step:
+                  <<: *deploy
+                  name: Deploy branch
+                  deployment: feature
+                  trigger: manual
+                  script:
+                      - yarn
+                      - export FEATURE_ENV=`echo $BITBUCKET_BRANCH | sed -e 's#feature/##' -e
+                        's#release/##' | tr '[:upper:]' '[:lower:]'`
+                      - AWS_ACCESS_KEY_ID=$STOREFRONT_BUCKET_ACCESS_KEY
+                        AWS_SECRET_ACCESS_KEY=$STOREFRONT_BUCKET_ACCESS_SECRET aws s3 sync
+                        s3://$STOREFRONT_BUCKET_NAME/.serverless .serverless --region eu-west-2
+                      - export RESULT=$?
+                      - export LOGFILE=peracto-$BITBUCKET_DEPLOYMENT_ENVIRONMENT-serverless-log.txt
+                      - export NEXT_PUBLIC_API_URL="https://$SUBDOMAIN-api.$DOMAIN"
+                      - curl -s $NEXT_PUBLIC_API_URL || export
+                        NEXT_PUBLIC_API_URL="https://$STAGING_API_SUBDOMAIN.$DOMAIN"
+                      - SUBDOMAIN=$FEATURE_ENV yarn serverless --stage=$FEATURE_ENV --debug 2>&1 |
+                        tee $LOGFILE
+                      - bash ./check-for-deployment-errors.sh $LOGFILE
+                  artifacts:
+                      - .serverless/**
+            - step: *pushartifacts
+            - step:
+                  <<: *deploy
+                  name: Destroy deployment
+                  trigger: manual
+                  script:
+                      - yarn
+                      - AWS_ACCESS_KEY_ID=$STOREFRONT_BUCKET_ACCESS_KEY
+                        AWS_SECRET_ACCESS_KEY=$STOREFRONT_BUCKET_ACCESS_SECRET aws s3 sync
+                        s3://$STOREFRONT_BUCKET_NAME/.serverless .serverless --region eu-west-2
+                      - export RESULT=$?
+                      - export FEATURE_ENV=`echo $BITBUCKET_BRANCH | sed -e 's#feature/##' -e
+                        's#release/##' | tr '[:upper:]' '[:lower:]'`
+                      - export LOGFILE=peracto-feature-serverless-log.txt
+                      - SUBDOMAIN=$FEATURE_ENV yarn serverless remove --stage=$FEATURE_ENV --debug
+                        2>&1 | tee $LOGFILE
+                      - bash ./check-for-deployment-errors.sh $LOGFILE
+            - step: *pushartifacts

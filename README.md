@@ -1,30 +1,69 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Client Scaffold
+
+This project was bootstrapped using Peracto's client scaffolder. It comes with
+the following features and functionality out of the box:
+
+-   NextJS configured as a main application
+-   Storybook configuration
+-   TypeScript Support for writing consistently solid code
+-   Serverless Deployments for NextJS
+-   Code linting via Prettier and ESLint
+-   Commit linting via conventional commits
+-   MobX configured for a global state management tool
+-   Google Fonts included in both Storybook and NextJS
+-   Chakra UI support, including configuration within Storybook and NextJS to
+    use custom themes
 
 ## Getting Started
+
+Before starting, you'll need to create a `.env.local` file with the API URL for
+the API you want to work with, ie
+
+```
+NEXT_PUBLIC_API_URL=https://stage-api.peracto3.pub
+```
+
+We prepend the `NEXT_PUBLIC_` bit to ensure it's available to the browser. See
+[this article](https://nextjs.org/docs/basic-features/environment-variables) for
+more information.
 
 First, run the development server:
 
 ```bash
-npm run dev
-# or
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the
+result.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+### Project structure
 
-## Learn More
+This project was generated using internal tools, depending on the age of the
+project, this may have a slightly different structure, but most of the theory
+should be the same.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```txt
+.storybook/
+  main.js
+  preview-head.html
+  preview.js
+public/
+src/
+  layouts/
+    default.tsx
+  pages/
+    api/
+    _app.tsx
+    _document.tsx
+    index.tsx
+  hooks/
+    use-stores.ts
+  components/ExampleComponent/
+    __stories/
+      ExampleComponent.stories.tsx
+    __tests/
+      ExampleComponent.test.tsx
+    src/
+      ExampleComponent.tsx
+      index.ts
+```

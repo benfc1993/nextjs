@@ -1,11 +1,55 @@
 {
-    "name": "nextjs",
+    "name": "carbon.peracto3.pub",
     "version": "0.1.0",
     "private": true,
+    "homepage": "https://bitbucket.org/9xb/carbon.peracto3.pub/src/master/README.md",
+    "bugs": {
+        "url": "https://9xbagency.atlassian.net/projects/PER3/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git@bitbucket.org:9xb/carbon.peracto3.pub.git"
+    },
+    "license": "UNLICENSED",
+    "author": "Rick Booth <r.booth@9xb.com>",
     "scripts": {
-        "dev": "next dev",
         "build": "next build",
-        "start": "next start"
+        "build-storybook": "build-storybook --docs -s public",
+        "chromatic": "chromatic",
+        "commit": "git-cz",
+        "dev": "next dev",
+        "lint": "eslint src --ext .ts,.tsx,.js,.jsx --fix --no-eslintrc -c .eslintrc",
+        "sort": "sort-package-json",
+        "storybook": "start-storybook -p 6006 --docs -s public",
+        "test": "jest --passWithNoTests --env=jsdom --runInBand --detectOpenHandles --colors",
+        "test:coverage": "yarn test --coverage",
+        "test:update": "yarn test -u",
+        "test:watch": "yarn test --watch",
+        "upgrade-library": "yarn upgrade --scope @peracto-library --latest"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged",
+            "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+        }
+    },
+    "commitlint": {
+        "extends": [
+            "@commitlint/config-conventional"
+        ]
+    },
+    "lint-staged": {
+        "**/*.{md,yml,json,babelrc,eslintrc,prettierrc}": [
+            "npx prettier --write"
+        ],
+        "**/*.{ts,tsx,js,jsx}": [
+            "npx prettier --write"
+        ]
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
     },
     "dependencies": {
         "@chakra-ui/core": "^0.8.0",
@@ -19,7 +63,6 @@
         "@fortawesome/pro-regular-svg-icons": "^5.14.0",
         "@fortawesome/pro-solid-svg-icons": "^5.14.0",
         "@fortawesome/react-fontawesome": "^0.1.8",
-        "@loadable/component": "^5.14.1",
         "@peracto-library/shared": "^0.14.3",
         "@peracto-library/tasks": "^0.16.0",
         "@peracto/client": "^0.0.1-alpha.122",
@@ -92,5 +135,11 @@
         "sort-package-json": "^1.44.0",
         "ts-jest": "^26.4.0",
         "typescript": "^4.0.2"
+    },
+    "resolutions": {
+        "body-scroll-lock": "3.0.3"
+    },
+    "czConfig": {
+        "path": "node_modules/cz-conventional-changelog"
     }
 }

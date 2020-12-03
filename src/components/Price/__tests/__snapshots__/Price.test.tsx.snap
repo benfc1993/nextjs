@@ -1,0 +1,102 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Price matches the previous snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="css-5tcmhl"
+  >
+    <div
+      class="css-1l57n76"
+    >
+      <p
+        class="css-1vwxxzr"
+      >
+        <a
+          class="css-u5zpo1"
+        >
+          Sign in
+        </a>
+         for prices
+      </p>
+      <p
+        class="css-1b6ok2q"
+      >
+        or 
+        <a
+          class="css-91i5jt"
+          href="#"
+        >
+          apply
+        </a>
+         for a trade account online
+      </p>
+    </div>
+    <div
+      class="css-1xfe80n"
+    />
+    <div
+      class="css-v1qnb6"
+    >
+      <div
+        class="css-sbd8h9"
+      >
+        <svg
+          aria-hidden="true"
+          class="svg-inline--fa fa-check-circle fa-w-16 "
+          data-icon="check-circle"
+          data-prefix="fas"
+          focusable="false"
+          role="img"
+          style="width: 14px; height: 14px; display: block;"
+          viewBox="0 0 512 512"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"
+            fill="currentColor"
+          />
+        </svg>
+        <p
+          class="css-17t14zp"
+        >
+          In stock
+        </p>
+      </div>
+    </div>
+    <div
+      class="css-d8ofnv"
+    >
+      <label
+        class="css-176s5fq"
+        for="quantity"
+      >
+        <p
+          class="css-1evnsxq"
+        >
+          Quantity
+        </p>
+      </label>
+      <input
+        class="css-culepw"
+        id="quantity"
+        min="1"
+        step="1"
+        type="number"
+        value="1"
+      />
+    </div>
+    <button
+      class="css-c8qd0f"
+      type="button"
+    >
+      ADD TO BASKET
+    </button>
+    <button
+      class="css-12niwas"
+      type="button"
+    >
+      ADD TO QUOTES
+    </button>
+  </div>
+</DocumentFragment>
+`;

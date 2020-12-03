@@ -1,0 +1,7 @@
+export * from './account'
+export * from './common'
+export * from './footer'
+export * from './header'
+export * from './login'
+export * from './register'
+export * from './search'
