@@ -8,8 +8,33 @@
     "start": "next start"
   },
   "dependencies": {
+    "@peracto-library/carbon": "^0.1.0",
+    "@peracto-library/shared": "^0.7.9",
+    "@peracto-library/tasks": "^0.12.1",
+    "@peracto/client": "^0.0.1-alpha.122",
+    "@peracto/peracto-auth": "^0.0.1-alpha.197",
+    "@fortawesome/fontawesome-svg-core": "^1.2.30",
+    "@fortawesome/free-brands-svg-icons": "^5.12.1",
+    "@fortawesome/pro-duotone-svg-icons": "^5.14.0",
+    "@fortawesome/pro-light-svg-icons": "^5.14.0",
+    "@fortawesome/pro-regular-svg-icons": "^5.14.0",
+    "@fortawesome/pro-solid-svg-icons": "^5.14.0",
+    "@react-page/renderer": "^0.23.3",
     "next": "10.0.0",
-    "react": "17.0.1",
+    "react": "16.14.0",
+    "react-helmet": "^6.1.0",
     "react-dom": "17.0.1"
+  },
+  "devDependencies": {
+    "@zeit/next-css": "^1.0.1",
+    "@babel/core": "^7.11.6",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/plugin-proposal-decorators": "^7.10.5",
+    "typescript": "^4.1.2",
+    "runtypes": "^5.0.1",
+    "@testing-library/react": "^11.0.4",
+    "next-compose-plugins": "^2.2.0",
+    "next-pwa": "^3.1.4",
+    "next-transpile-modules": "^4.1.0"
   }
 }
